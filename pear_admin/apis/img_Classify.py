@@ -2,15 +2,15 @@ from flask import Blueprint, request,jsonify,current_app,send_file
 from flask_sqlalchemy.pagination import Pagination
 import os,time
 
-from aip import AipOcr
-APP_ID = '59228085'
-API_KEY = 'BTrWaPF1h5x9ONDidTWaHfTa'
-SECRET_KEY = '5zlJfbk7aYiwwc9ILm0Yl4hEV5mc0MwH'
-client = AipOcr(APP_ID, API_KEY, SECRET_KEY)
+from aip import AipImageClassify
+APP_ID = '66882825'
+API_KEY = 'eLqKCZUg0786XOfy7yVjARsE'
+SECRET_KEY = 'LS3qlwUQPX28SXQ8ObsMMCOoE3uLrHPf'
+client = AipImageClassify(APP_ID, API_KEY, SECRET_KEY)
 
 from pear_admin.extensions import db
 
-general_OCR_api = Blueprint("general_OCR", __name__)
+img_Classify_api = Blueprint("img_Classify", __name__)
 
 
 """ 存储POST图片 """
@@ -31,17 +31,15 @@ def get_file_content(filePath):
      return fp.read()
 
 
-""" 1. 调用OCR文字识别 """
-def img_general_OCR(filePath):
+""" 1. 调用车型检测识别 """
+def car_Detect(filePath):
   image = get_file_content(filePath)
-  res_data = client.basicAccurate(image)
-  reslist = []
-  for item in res_data['words_result']:
-    reslist.append(item['words'])
-  return reslist
+  res_data = client.carDetect(image)['result']
+#   print(res_data)
+  return res_data
 
 
-@general_OCR_api.get('/getfile')
+@img_Classify_api.get('/getfile')
 def getfile():
     filename=request.args.get('filename')
     if filename is None:
@@ -53,10 +51,11 @@ def getfile():
     except Exception:
         return jsonify(code=400,messages='文件不存在')
     return file
+    
 
 
-@general_OCR_api.post("/general_OCR/word")
-def run_general_OCR():
+@img_Classify_api.post("/img_Classify/carDetect")
+def run_img_Classify():
     file = request.files
     if file.get('file') is None:
         return jsonify(code=400,messages='参数不存在')
@@ -65,8 +64,8 @@ def run_general_OCR():
     url='/api/v1/getfile?filename='+filename
     
     filepath = 'static/images/' + filename
-    res_list = img_general_OCR(filepath)
-    res_str = '\n'.join(res_list)
-      
-    return {"code": 0, "data": res_str, "url": url}
+    res_dict = car_Detect(filepath)
+
+    return {"code": 0, "data": res_dict, "url": url}
+
 

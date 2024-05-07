@@ -6,6 +6,7 @@ from .rights import rights_api
 from .role import role_api
 from .user import user_api
 from .general_OCR import general_OCR_api
+from .img_Classify import img_Classify_api
 
 
 def register_apis(app: Flask):
@@ -17,5 +18,6 @@ def register_apis(app: Flask):
     apis.register_blueprint(department_api)
     apis.register_blueprint(user_api)
     apis.register_blueprint(general_OCR_api)
+    apis.register_blueprint(img_Classify_api)
 
     app.register_blueprint(apis)
