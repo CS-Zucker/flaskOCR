@@ -13,20 +13,20 @@ def general_OCR_seal():
 
 
 @general_OCR_bp.get("/general_OCR/qrcode")
-def general_OCR_seal():
+def general_OCR_qrcode():
     return render_template(f"view/general_OCR/OCR_seal.html")
 
 
 @general_OCR_bp.get("/general_OCR/handwriting")
-def general_OCR_seal():
+def general_OCR_handwriting():
     return render_template(f"view/general_OCR/OCR_seal.html")
 
 
 @general_OCR_bp.get("/general_OCR/number")
-def general_OCR_seal():
+def general_OCR_number():
     return render_template(f"view/general_OCR/OCR_seal.html")
 
 
 @general_OCR_bp.get("/general_OCR/bankcard")
-def general_OCR_seal():
+def general_OCR_bankcard():
     return render_template(f"view/general_OCR/OCR_seal.html")
