@@ -10,7 +10,7 @@ client = AipImageClassify(APP_ID, API_KEY, SECRET_KEY)
 
 from pear_admin.extensions import db
 
-img_Classify_api = Blueprint("img_Classify", __name__)
+car_detect_api = Blueprint("car_detect", __name__)
 
 
 """ 存储POST图片 """
@@ -32,14 +32,14 @@ def get_file_content(filePath):
 
 
 """ 1. 调用车型检测识别 """
-def car_Detect(filePath):
+def carDetect(filePath):
   image = get_file_content(filePath)
   res_data = client.carDetect(image)['result']
 #   print(res_data)
   return res_data
 
 
-@img_Classify_api.get('/getfile')
+@car_detect_api.get('/getfile')
 def getfile():
     filename=request.args.get('filename')
     if filename is None:
@@ -54,8 +54,8 @@ def getfile():
     
 
 
-@img_Classify_api.post("/img_Classify/carDetect")
-def run_img_Classify():
+@car_detect_api.post("/car_detect/carDetect")
+def run_car_detect():
     file = request.files
     if file.get('file') is None:
         return jsonify(code=400,messages='参数不存在')
@@ -64,7 +64,7 @@ def run_img_Classify():
     url='/api/v1/getfile?filename='+filename
     
     filepath = 'static/images/' + filename
-    res_dict = car_Detect(filepath)
+    res_dict = carDetect(filepath)
 
     return {"code": 0, "data": res_dict, "url": url}
 

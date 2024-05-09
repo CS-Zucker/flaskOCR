@@ -32,7 +32,7 @@ def get_file_content(filePath):
 
 
 """ 1. 调用OCR文字识别 """
-def img_general_OCR(filePath):
+def general_OCR(filePath):
   image = get_file_content(filePath)
   res_data = client.basicAccurate(image)
   reslist = []
@@ -40,6 +40,22 @@ def img_general_OCR(filePath):
     reslist.append(item['words'])
   return reslist
 
+""" 2. 调用OCR印章识别 """
+def seal_OCR(filePath):
+  image = get_file_content(filePath)
+  res_data = client.seal(image)
+  reslist = []
+  for i, item in enumerate(res_data['result']):
+    reslist.append("结果" + str(i+1) + ":")
+    reslist.append(f"宽度： {item['location']['width']}")
+    reslist.append(f"高度： {item['location']['height']}")
+    reslist.append(f"上边距： {item['location']['top']}")
+    reslist.append(f"左边距： {item['location']['left']}")
+    reslist.append(f"上环主要文字： {item['major']['words']}")
+    for j, minor_item in enumerate(item['minor']):
+        reslist.append(f"其他位置文字{j+1}： {minor_item['words']}")
+    reslist.append(' ')
+  return reslist
 
 @general_OCR_api.get('/getfile')
 def getfile():
@@ -65,7 +81,23 @@ def run_general_OCR():
     url='/api/v1/getfile?filename='+filename
     
     filepath = 'static/images/' + filename
-    res_list = img_general_OCR(filepath)
+    res_list = general_OCR(filepath)
+    res_str = '\n'.join(res_list)
+      
+    return {"code": 0, "data": res_str, "url": url}
+
+
+@general_OCR_api.post("/general_OCR/seal")
+def run_seal_OCR():
+    file = request.files
+    if file.get('file') is None:
+        return jsonify(code=400,messages='参数不存在')
+    
+    filename = save_file(file)
+    url='/api/v1/getfile?filename='+filename
+    
+    filepath = 'static/images/' + filename
+    res_list = seal_OCR(filepath)
     res_str = '\n'.join(res_list)
       
     return {"code": 0, "data": res_str, "url": url}

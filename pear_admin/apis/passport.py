@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from copy import deepcopy
 
+from flask import jsonify
 from flask import Blueprint, make_response, request
 from flask_jwt_extended import (
     create_access_token,
@@ -10,7 +11,7 @@ from flask_jwt_extended import (
 )
 
 from pear_admin.extensions import db
-from pear_admin.orms import RightsORM, RoleORM, UserORM
+from pear_admin.orms import RightsORM, RoleORM, UserORM, user_role, role_rights
 
 passport_api = Blueprint("passport", __name__)
 
@@ -25,7 +26,7 @@ def login_in():
 
     if not user:
         return {"message": "用户不存在", "code": -1}, 401
-    if not user.check_password(data["password"]):
+    if user.password != data["password"]:
         return {"message": "用户密码错误", "code": -1}, 401
 
     access_token = create_access_token(user)
@@ -42,6 +43,38 @@ def login_in():
 
     return response
 
+
+@passport_api.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    nickname = data.get('nickname')
+    mobile = data.get('mobile')
+    email = data.get('email')
+
+    if not username or not password or not nickname or not mobile or not email:
+        return jsonify({'message': '请填写完整信息'})
+
+    if UserORM.query.filter_by(username=username).first():
+        return jsonify({'message': '用户名已存在'})
+
+    new_user = UserORM(
+        username=username,
+        password=password,
+        nickname=nickname,
+        mobile=mobile,
+        email=email
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    
+    user_id = new_user.id
+    new_user_role = user_role.insert().values(user_id=user_id, role_id=3)
+    db.session.execute(new_user_role)
+    db.session.commit()
+
+    return jsonify({'message': '注册成功'})
 
 @passport_api.route("/logout", methods=["GET", "POST"])
 @jwt_required()
@@ -64,7 +97,7 @@ def menus_api():
 
     menu_dict_list = OrderedDict()
     for menu_dict in rights_list:
-        if menu_dict["id"] in menu_dict_list.keys():  # 如果当前节点已经存在与字典中
+        if menu_dict["id"] in menu_dict_list.keys():  # 如果当前节点已经存在于字典中
             # 当前节点添加子节点
             menu_dict["children"] = deepcopy(menu_dict_list[menu_dict["id"]])
             menu_dict["children"].sort(key=lambda item: item["sort"])

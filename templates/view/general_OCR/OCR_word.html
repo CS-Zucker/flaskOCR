@@ -18,16 +18,16 @@
         <blockquote class="layui-elem-quote layui-text">
           <h2 style="text-align:center;">通用文字识别（高精度版）</h2>
         </blockquote>
-        <div class="layui-upload-drag" style="display:block;" id="ID-upload-demo-drag">
+        <div class="layui-upload-drag" style="display:block;" id="word-upload-drag">
           <i class="layui-icon layui-icon-upload"></i>
           <div>点击上传，或将文件拖拽到此处</div>
-          <div class="layui-hide" id="ID-upload-demo-preview">
+          <div class="layui-hide" id="word-upload-preview">
             <hr/> <img src="" alt="上传成功后渲染" height="400">
           </div>
         </div>
-    
-        <div class="layui-form" style="padding: 10px"  height="600">
-          <textarea name="textlist" placeholder="" class="layui-textarea"></textarea>
+        <hr/> 
+        <div class="layui-form">
+          <textarea name="textlist" rows=6 placeholder="" class="layui-textarea"></textarea>
         </div>
     
       </div>
@@ -41,13 +41,13 @@
         var $ = layui.$;
         // 渲染
         upload.render({
-          elem: '#ID-upload-demo-drag',
+          elem: '#word-upload-drag',
           url: '/api/v1/general_OCR/word', // 实际使用时改成您自己的上传接口即可。
           done: function (res) {
             $('textarea[name="textlist"]').val(res.data)
             
             layer.msg('上传成功');
-            $('#ID-upload-demo-preview').removeClass('layui-hide')
+            $('#word-upload-preview').removeClass('layui-hide')
               .find('img').attr('src', res.url);
             
             console.log(res)

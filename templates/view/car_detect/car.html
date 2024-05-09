@@ -18,10 +18,10 @@
         <blockquote class="layui-elem-quote layui-text">
           <h2 style="text-align:center;">车型识别</h2>
         </blockquote>
-        <div class="layui-upload-drag" style="display:block;" id="ID-upload-demo-drag">
+        <div class="layui-upload-drag" style="display:block;" id="car-upload-drag">
           <i class="layui-icon layui-icon-upload"></i>
           <div>点击上传，或将文件拖拽到此处</div>
-          <div class="layui-hide" id="ID-upload-demo-preview">
+          <div class="layui-hide" id="car-upload-preview">
             <hr/> <img src="" alt="上传成功后渲染" height="300">
           </div>
         </div>
@@ -44,13 +44,13 @@
         
         // 渲染
         upload.render({
-          elem: '#ID-upload-demo-drag',
-          url: '/api/v1/img_Classify/carDetect', // 实际使用时改成您自己的上传接口即可。
+          elem: '#car-upload-drag',
+          url: '/api/v1/car_detect/carDetect', // 实际使用时改成您自己的上传接口即可。
           done: function (res) {
             // $('textarea[name="textlist"]').val(res.data)
 
             layer.msg('上传成功');
-            $('#ID-upload-demo-preview').removeClass('layui-hide')
+            $('#car-upload-preview').removeClass('layui-hide')
               .find('img').attr('src', res.url);
 
             var itemHTML = "";

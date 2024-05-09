@@ -7,7 +7,7 @@ from pear_admin.orms import UserORM
 from pear_admin.views import register_views
 
 
-def create_app(config_name="dev"):
+def create_app(config_name="prod"):
     app = Flask("pear-admin-flask")
 
     app.config.from_object(config[config_name])

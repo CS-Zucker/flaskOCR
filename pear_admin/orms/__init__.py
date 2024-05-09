@@ -1,6 +1,6 @@
 from pear_admin.extensions import db
 
-from .department import DepartmentORM
+
 from .rights import RightsORM
 from .role import RoleORM
 from .user import UserORM
