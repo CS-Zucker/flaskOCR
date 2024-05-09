@@ -67,19 +67,10 @@ def seal_OCR(filePath):
     return reslist
 
 
-""" 3. 调用二维码识别 """
 
 
-def qrcode_general_OCR(filePath):
-    image = get_file_content(filePath)
-    res_data = client.qrcode(image)
-    reslist = []
-    for item in res_data['words_result']:
-        reslist.append(item['words'])
-    return reslist
 
-
-""" 4. 调用手写文字识别 """
+""" 3. 调用手写文字识别 """
 
 
 def handwriting_general_OCR(filePath):
@@ -91,28 +82,19 @@ def handwriting_general_OCR(filePath):
     return reslist
 
 
-""" 5. 调用数字识别 """
+""" 4. 调用数字识别 """
 
 
 def number_general_OCR(filePath):
     image = get_file_content(filePath)
     res_data = client.numbers(image)
     reslist = []
-    for item in res_data['words_result']:
-        reslist.append(item['words'])
+    for i,item in enumerate(res_data['words_result']):
+        reslist.append( "结果" +str(i+1) + ": " + item['words'])
     return reslist
 
 
-""" 6. 调用银行卡识别 """
 
-
-def bankcard_general_OCR(filePath):
-    image = get_file_content(filePath)
-    res_data = client.bankcard(image)
-    reslist = []
-    for item in res_data['words_result']:
-        reslist.append(item['words'])
-    return reslist
 
 
 @general_OCR_api.get('/getfile')
@@ -161,20 +143,7 @@ def run_seal_OCR():
     return {"code": 0, "data": res_str, "url": url}
 
 
-@general_OCR_api.post("/general_OCR/qrcode")
-def run_qrcode_OCR():
-    file = request.files
-    if file.get('file') is None:
-        return jsonify(code=400, messages='参数不存在')
 
-    filename = save_file(file)
-    url = '/api/v1/getfile?filename=' + filename
-
-    filepath = 'static/images/' + filename
-    res_list = qrcode_general_OCR(filepath)
-    res_str = '\n'.join(res_list)
-
-    return {"code": 0, "data": res_str, "url": url}
 
 
 @general_OCR_api.post("/general_OCR/handwriting")
@@ -209,17 +178,3 @@ def run_number_OCR():
     return {"code": 0, "data": res_str, "url": url}
 
 
-@general_OCR_api.post("/general_OCR/bankcard")
-def run_bankcard_OCR():
-    file = request.files
-    if file.get('file') is None:
-        return jsonify(code=400, messages='参数不存在')
-
-    filename = save_file(file)
-    url = '/api/v1/getfile?filename=' + filename
-
-    filepath = 'static/images/' + filename
-    res_list = bankcard_general_OCR(filepath)
-    res_str = '\n'.join(res_list)
-
-    return {"code": 0, "data": res_str, "url": url}
