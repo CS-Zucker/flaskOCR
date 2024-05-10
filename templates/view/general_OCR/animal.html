@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <title>车型识别</title>
+</head>
+
+
+<body>
+<div style="padding: 16px">
+    <div class="layui-card">
+        <div class="layui-card-body">
+
+            <blockquote class="layui-elem-quote layui-text">
+                <h2 style="text-align:center;">动物识别</h2>
+            </blockquote>
+            <div class="layui-upload-drag" style="display:block;" id="animal_drag">
+                <i class="layui-icon layui-icon-upload"></i>
+                <div>点击上传，或将文件拖拽到此处</div>
+                <div class="layui-hide" id="animal_pre">
+                    <hr/>
+                    <img src="" alt="上传成功后渲染" height="300">
+                </div>
+            </div>
+
+            <hr class="ws-space-16">
+
+            <div id="item-list">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    layui.use(function () {
+        var upload = layui.upload;
+        var element = layui.element
+        var $ = layui.$;
+
+        // 渲染
+        upload.render({
+            elem: '#animal_drag',
+            url: '/api/v1/animal_recognition',
+            done: function (res) {
+                layer.msg('上传成功');
+                $('#animal_pre').removeClass('layui-hide')
+                        .find('img').attr('src', res.url);
+
+                var itemHTML = "";
+                Object.keys(res.data).forEach(function (key) {
+                    var animal = res.data[key];
+                    itemHTML += '<h3>' + animal.name + '</h3>';
+                    itemHTML += "<div style='width:300px; padding:5px'><div class='layui-progress layui-progress-big' lay-showpercent='true'><div class='layui-progress-bar' lay-percent='" + parseFloat(animal.score) * 100 + "%'></div></div></div>";
+                });
+                $('#item-list').html(itemHTML);
+                element.render('progress');
+            }
+        });
+
+    });
+
+</script>
+
+</body>
+
+</html>
