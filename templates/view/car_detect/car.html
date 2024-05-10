@@ -28,7 +28,7 @@
         
         <hr class="ws-space-16">
         
-        <div id="item-list">
+        <div id="car-list">
         </div>
 
       </div>
@@ -47,7 +47,6 @@
           elem: '#car-upload-drag',
           url: '/api/v1/car_detect/carDetect', // 实际使用时改成您自己的上传接口即可。
           done: function (res) {
-            // $('textarea[name="textlist"]').val(res.data)
 
             layer.msg('上传成功');
             $('#car-upload-preview').removeClass('layui-hide')
@@ -59,7 +58,7 @@
               itemHTML += "<div style='width:300px; padding:5px'><div class='layui-progress layui-progress-big' lay-showpercent='true'><div class='layui-progress-bar' lay-percent='"+ res.data[i]['score']*100 +"%'></div></div></div>";
               
             }
-            $('#item-list').html(itemHTML);  // 将生成的HTML插入到列表中
+            $('#car-list').html(itemHTML);  // 将生成的HTML插入到列表中
             element.render('progress'); //加载进度条样式
             console.log(res)
           }

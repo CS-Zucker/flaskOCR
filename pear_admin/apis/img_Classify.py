@@ -10,7 +10,7 @@ client = AipImageClassify(APP_ID, API_KEY, SECRET_KEY)
 
 from pear_admin.extensions import db
 
-car_detect_api = Blueprint("car_detect", __name__)
+img_Classify_api = Blueprint("img_Classify", __name__)
 
 
 """ 存储POST图片 """
@@ -31,15 +31,31 @@ def get_file_content(filePath):
      return fp.read()
 
 
-""" 1. 调用车型检测识别 """
-def car_Detect(filePath):
+""" 1. 调用动物识别 """
+def animal_Detect(filePath):
   image = get_file_content(filePath)
-  res_data = client.carDetect(image)['result']
+  res_data = client.animalDetect(image)['result']
 #   print(res_data)
   return res_data
 
 
-@car_detect_api.get('/getfile')
+""" 2. 调用菜肴识别 """
+def dish_Detect(filePath):
+  image = get_file_content(filePath)
+  res_data = client.dishDetect(image)['result']
+#   print(res_data)
+  return res_data
+
+
+""" 3. 调用果蔬识别 """
+def fruit_Detect(filePath):
+  image = get_file_content(filePath)
+  res_data = client.ingredient(image)['result']
+#   print(res_data)
+  return res_data
+
+
+@img_Classify_api.get('/getfile')
 def getfile():
     filename=request.args.get('filename')
     if filename is None:
@@ -54,8 +70,8 @@ def getfile():
     
 
 
-@car_detect_api.post("/car_detect/carDetect")
-def run_car_detect():
+@img_Classify_api.post("/img_Classify/animal")
+def run_animal_Detect():
     file = request.files
     if file.get('file') is None:
         return jsonify(code=400,messages='参数不存在')
@@ -64,7 +80,37 @@ def run_car_detect():
     url='/api/v1/getfile?filename='+filename
     
     filepath = 'static/images/' + filename
-    res_dict = car_Detect(filepath)
+    res_dict = animal_Detect(filepath)
+
+    return {"code": 0, "data": res_dict, "url": url}
+
+
+@img_Classify_api.post("/img_Classify/dish")
+def run_dish_Detect():
+    file = request.files
+    if file.get('file') is None:
+        return jsonify(code=400,messages='参数不存在')
+    
+    filename = save_file(file)
+    url='/api/v1/getfile?filename='+filename
+    
+    filepath = 'static/images/' + filename
+    res_dict = dish_Detect(filepath)
+
+    return {"code": 0, "data": res_dict, "url": url}
+
+
+@img_Classify_api.post("/img_Classify/fruit")
+def run_fruit_Detect():
+    file = request.files
+    if file.get('file') is None:
+        return jsonify(code=400,messages='参数不存在')
+    
+    filename = save_file(file)
+    url='/api/v1/getfile?filename='+filename
+    
+    filepath = 'static/images/' + filename
+    res_dict = fruit_Detect(filepath)
 
     return {"code": 0, "data": res_dict, "url": url}
 

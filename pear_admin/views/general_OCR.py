@@ -20,4 +20,4 @@ def general_OCR_handwriting():
 
 @general_OCR_bp.get("/general_OCR/numbers")
 def general_OCR_number():
-    return render_template(f"view/general_OCR/number.html")
+    return render_template(f"view/general_OCR/OCR_number.html")

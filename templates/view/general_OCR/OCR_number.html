@@ -28,7 +28,7 @@
             </div>
             <hr/>
             <div class="layui-form">
-                <textarea name="textlist" rows=10 placeholder="" class="layui-textarea"></textarea>
+                <textarea id="number-text"name="textlist" rows=10 placeholder="" class="layui-textarea"></textarea>
             </div>
 
         </div>
@@ -45,7 +45,7 @@
             elem: '#number_upload-drag',
             url: '/api/v1/general_OCR/number', // 实际使用时改成您自己的上传接口即可。
             done: function (res) {
-                $('textarea[name="textlist"]').val(res.data)
+                $('#number-text').val(res.data)
 
                 layer.msg('上传成功');
                 $('#number_upload-preview').removeClass('layui-hide')

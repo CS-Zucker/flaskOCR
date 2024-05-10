@@ -28,7 +28,7 @@
             </div>
             <hr/>
             <div class="layui-form">
-                <textarea name="textlist" rows=6 placeholder="" class="layui-textarea"></textarea>
+                <textarea id="bankcard-text" name="textlist" rows=6 placeholder="" class="layui-textarea"></textarea>
             </div>
 
         </div>
@@ -45,7 +45,7 @@
             elem: '#bankcard-upload-drag',
             url: '/api/v1/cardcode_OCR/bankcard', // 实际使用时改成您自己的上传接口即可。
             done: function (res) {
-                $('textarea[name="textlist"]').val(res.data)
+                $('#bankcard-text').val(res.data)
 
                 layer.msg('上传成功');
                 $('#bankcard-upload-preview').removeClass('layui-hide')

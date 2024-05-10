@@ -27,7 +27,7 @@
         </div>
         <hr/> 
         <div class="layui-form">
-          <textarea name="textlist" rows=10 placeholder="" class="layui-textarea"></textarea>
+          <textarea id="seal-text"name="textlist" rows=10 placeholder="" class="layui-textarea"></textarea>
         </div>
     
       </div>
@@ -44,7 +44,7 @@
           elem: '#seal-upload-drag',
           url: '/api/v1/general_OCR/seal', // 实际使用时改成您自己的上传接口即可。
           done: function (res) {
-            $('textarea[name="textlist"]').val(res.data)
+            $('#seal-text').val(res.data)
             
             layer.msg('上传成功');
             $('#seal-upload-preview').removeClass('layui-hide')

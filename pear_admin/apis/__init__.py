@@ -7,6 +7,7 @@ from .user import user_api
 from .general_OCR import general_OCR_api
 from .car_detect import car_detect_api
 from .cardcode_OCR import cardcode_OCR_api
+from .img_Classify import img_Classify_api
 
 
 
@@ -20,5 +21,6 @@ def register_apis(app: Flask):
     apis.register_blueprint(general_OCR_api)
     apis.register_blueprint(car_detect_api)
     apis.register_blueprint(cardcode_OCR_api)
+    apis.register_blueprint(img_Classify_api)
 
     app.register_blueprint(apis)
