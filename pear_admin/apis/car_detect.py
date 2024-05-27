@@ -31,10 +31,17 @@ def get_file_content(filePath):
      return fp.read()
 
 
-""" 1. 调用车型检测识别 """
+""" 1. 调用车型识别 """
 def car_Detect(filePath):
   image = get_file_content(filePath)
   res_data = client.carDetect(image)['result']
+#   print(res_data)
+  return res_data
+
+""" 2. 调用车辆检测 """
+def vehicle_Detect(filePath):
+  image = get_file_content(filePath)
+  res_data = client.vehicleDetect(image)['vehicle_num']
 #   print(res_data)
   return res_data
 
@@ -65,6 +72,21 @@ def run_car_detect():
     
     filepath = 'static/images/' + filename
     res_dict = car_Detect(filepath)
+
+    return {"code": 0, "data": res_dict, "url": url}
+
+
+@car_detect_api.post("/car_detect/vehicleDetect")
+def run_vehicle_detect():
+    file = request.files
+    if file.get('file') is None:
+        return jsonify(code=400,messages='参数不存在')
+    
+    filename = save_file(file)
+    url='/api/v1/getfile?filename='+filename
+    
+    filepath = 'static/images/' + filename
+    res_dict = vehicle_Detect(filepath)
 
     return {"code": 0, "data": res_dict, "url": url}
 

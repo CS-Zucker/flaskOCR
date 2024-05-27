@@ -28,7 +28,7 @@
         
         <hr class="ws-space-16">
         
-        <div id="item-list">
+        <div id="vehicle-list">
         </div>
 
       </div>
@@ -45,7 +45,7 @@
         // 渲染
         upload.render({
           elem: '#vehicle-upload-drag',
-          url: '/api/v1/car_detect/carDetect', // 实际使用时改成您自己的上传接口即可。
+          url: '/api/v1/car_detect/vehicleDetect', // 实际使用时改成您自己的上传接口即可。
           done: function (res) {
             // $('textarea[name="textlist"]').val(res.data)
 
@@ -54,12 +54,12 @@
               .find('img').attr('src', res.url);
 
             var itemHTML = "";
-            for (var i = 0; i < res.data.length; i++) {
-              itemHTML += '<h3>' + res.data[i]['name'] + '\t' + res.data[i]['year'] + '</h3>';
-              itemHTML += "<div style='width:300px; padding:5px'><div class='layui-progress layui-progress-big' lay-showpercent='true'><div class='layui-progress-bar' lay-percent='"+ res.data[i]['score']*100 +"%'></div></div></div>";
+            for (var key in res.data) {
+              itemHTML += '<h3>' + key + ':\t' + res.data[key] + '</h3>';
+              itemHTML += "<div style='width:300px; padding:5px'><div class='layui-progress layui-progress-big' lay-showpercent='true'><div class='layui-progress-bar' lay-percent='"+ res.data[key] +"'></div></div></div>";
               
             }
-            $('#item-list').html(itemHTML);  // 将生成的HTML插入到列表中
+            $('#vehicle-list').html(itemHTML);  // 将生成的HTML插入到列表中
             element.render('progress'); //加载进度条样式
             console.log(res)
           }
